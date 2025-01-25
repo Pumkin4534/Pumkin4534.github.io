@@ -1,85 +1,52 @@
-let dino = document.querySelector('.dino');
-let obstacle = document.querySelector('.obstacle');
-let scoreElement = document.getElementById('score');
-
-let isJumping = false;
-let isGameOver = false; // Variable to track game over state
-let gravity = 0.9;
+let dino = document.getElementById('dino');
+let cactus = document.getElementById('cactus');
+let scoreDisplay = document.getElementById('score');
 let score = 0;
+let isJumping = false;
 
+document.addEventListener('keydown', jump);
 
-// Function to start the game
-function startGame() {
-    // Prevent multiple starts
-    if (isGameOver) {
-        isGameOver = false;
-        score = 0;
-        scoreElement.innerText = score;
-        obstacle.style.right = '-40px';
-        dino.style.bottom = '0px';
-    }
+function jump(event) {
+  if (event.code === "Space" && !isJumping) {
+    isJumping = true;
+    let jumpHeight = 0;
+    
+    let jumpInterval = setInterval(() => {
+      if (jumpHeight < 100) {
+        jumpHeight += 5;
+        dino.style.bottom = (30 + jumpHeight) + 'px';
+      } else {
+        clearInterval(jumpInterval);
+        let fallInterval = setInterval(() => {
+          if (jumpHeight > 0) {
+            jumpHeight -= 5;
+            dino.style.bottom = (30 + jumpHeight) + 'px';
+          } else {
+            clearInterval(fallInterval);
+            isJumping = false;
+          }
+        }, 20);
+      }
+    }, 20);
+  }
 }
 
-// Jumping logic when spacebar is pressed
-document.addEventListener('keydown', (e) => {
-    if (e.code === 'Space') {
-        if (isGameOver) return; // Prevent jumping if game is over
+let cactusMoveInterval = setInterval(() => {
+  let cactusPosition = parseInt(window.getComputedStyle(cactus).getPropertyValue('right'));
+  if (cactusPosition >= 800) {
+    cactus.style.right = '-60px';
+    score += 1;
+    scoreDisplay.innerText = "Score: " + score;
+  } else {
+    cactus.style.right = (cactusPosition + 5) + 'px';
+  }
 
-        // Start the game when space is pressed for the first time
-        if (!score) {
-            startGame();
-        }
+  let dinoPosition = parseInt(window.getComputedStyle(dino).getPropertyValue('bottom'));
 
-        if (!isJumping) {
-            isJumping = true;
-            let jumpHeight = 150; // Height of the jump
-            let jumpInterval = setInterval(() => {
-                if (jumpHeight > 0) {
-                    dino.style.bottom = (parseInt(dino.style.bottom) + 10) + 'px';
-                    jumpHeight -= 10;
-                } else {
-                    clearInterval(jumpInterval);
-                    let fallInterval = setInterval(() => {
-                        if (parseInt(dino.style.bottom) > 0) {
-                            dino.style.bottom = (parseInt(dino.style.bottom) - 10) + 'px';
-                        } else {
-                            clearInterval(fallInterval);
-                            isJumping = false;
-                        }
-                    }, 20);
-                }
-            }, 20);
-        }
-    }
-});
-
-// Obstacle movement and collision detection
-let obstacleInterval = setInterval(() => {
-    if (isGameOver) return; // Stop game mechanics if game is over
-
-    let obstaclePosition = parseInt(obstacle.style.right);
-    let dinoPosition = parseInt(dino.style.bottom);
-
-    if (obstaclePosition > 600) {
-        obstacle.style.right = '-40px';
-        score++;
-        scoreElement.innerText = score;
-    } else {
-        obstacle.style.right = (obstaclePosition + 5) + 'px';
-    }
-
-    // Check for collision
-    if (obstaclePosition > 50 && obstaclePosition < 90 && dinoPosition <= 40) {
-        endGame();
-    }
-}, 20);
-
-// Function to end the game when a collision happens
-function endGame() {
-    isGameOver = true;
-    alert('Game Over! Final Score: ' + score);
+  if (cactusPosition >= 50 && cactusPosition <= 90 && dinoPosition <= 80 && !isJumping) {
+    alert("Game Over! Final Score: " + score);
     score = 0;
-    scoreElement.innerText = score;
-    obstacle.style.right = '-40px'; // Reset the obstacle position
-    dino.style.bottom = '0px'; // Reset the dino's position
-}
+    scoreDisplay.innerText = "Score: " + score;
+    cactus.style.right = '-60px'; 
+  }
+}, 20);
