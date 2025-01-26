@@ -41,6 +41,9 @@ let cactusMoveInterval = setInterval(() => {
   let cactusRect = cactus.getBoundingClientRect(); // Get cactus dimensions
   let dinoRect = dino.getBoundingClientRect(); // Get dino dimensions
 
+  // Debugging (optional: remove after testing)
+  console.log("Dino:", dinoRect, "Cactus:", cactusRect);
+
   // Move cactus
   let cactusPosition = parseInt(window.getComputedStyle(cactus).getPropertyValue('right'));
   if (cactusPosition >= 800) {
@@ -58,6 +61,8 @@ let cactusMoveInterval = setInterval(() => {
     dinoRect.bottom > cactusRect.top && // Dino's bottom is above cactus's top
     dinoRect.top < cactusRect.bottom // Dino's top is below cactus's bottom
   ) {
+    // Debugging: Log collision details
+    console.log("Collision detected!");
     alert("Game Over! Final Score: " + score);
     score = 0;
     scoreDisplay.innerText = "Score: " + score;
