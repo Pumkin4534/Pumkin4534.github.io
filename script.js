@@ -6,8 +6,15 @@ let score = 0;
 let isJumping = false;
 let backgroundPosition = 0; // Initial position of the background
 
+// Add event listeners for both keyboard and touch inputs
 document.addEventListener('keydown', (event) => {
   if (event.code === "Space" && !isJumping) {
+    jump();
+  }
+});
+
+document.addEventListener('touchstart', (event) => {
+  if (!isJumping) {
     jump();
   }
 });
@@ -43,19 +50,19 @@ let gameInterval = setInterval(() => {
   let cactusRect = cactus.getBoundingClientRect(); // Get cactus dimensions
   let dinoRect = dino.getBoundingClientRect(); // Get dino dimensions
 
-  // Adjust hitboxes for dino and cactus
+  // Refine the hitboxes for dino and cactus
   let adjustedDino = {
-    top: dinoRect.top + 10,    // Shrink hitbox vertically
-    bottom: dinoRect.bottom - 10,
-    left: dinoRect.left + 10, // Shrink hitbox horizontally
-    right: dinoRect.right - 10,
+    top: dinoRect.top + 5,    // Shrink hitbox slightly from top
+    bottom: dinoRect.bottom - 5, // Shrink hitbox slightly from bottom
+    left: dinoRect.left + 12, // Shrink hitbox horizontally from left
+    right: dinoRect.right - 12, // Shrink hitbox horizontally from right
   };
 
   let adjustedCactus = {
-    top: cactusRect.top + 5,    // Shrink hitbox vertically
-    bottom: cactusRect.bottom - 5,
-    left: cactusRect.left + 5,  // Shrink hitbox horizontally
-    right: cactusRect.right - 5,
+    top: cactusRect.top + 5,    // Shrink hitbox slightly from top
+    bottom: cactusRect.bottom - 10, // Shrink hitbox more from bottom
+    left: cactusRect.left + 8,  // Shrink hitbox horizontally from left
+    right: cactusRect.right - 8, // Shrink hitbox horizontally from right
   };
 
   // Debugging hitboxes (optional, remove after testing)
