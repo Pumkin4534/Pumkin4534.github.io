@@ -38,7 +38,7 @@ function jump() {
   }, 20);
 }
 
-// Game loop for movement and collision detection
+// Game loop for movement, scrolling, and collision detection
 let gameInterval = setInterval(() => {
   let cactusRect = cactus.getBoundingClientRect(); // Get cactus dimensions
   let dinoRect = dino.getBoundingClientRect(); // Get dino dimensions
