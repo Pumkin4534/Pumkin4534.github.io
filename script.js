@@ -38,10 +38,28 @@ function jump() {
   }, 20);
 }
 
-// Cactus movement and collision detection
+// Game loop for movement and collision detection
 let gameInterval = setInterval(() => {
   let cactusRect = cactus.getBoundingClientRect(); // Get cactus dimensions
   let dinoRect = dino.getBoundingClientRect(); // Get dino dimensions
+
+  // Adjust hitboxes for dino and cactus
+  let adjustedDino = {
+    top: dinoRect.top + 10,    // Shrink hitbox vertically
+    bottom: dinoRect.bottom - 10,
+    left: dinoRect.left + 10, // Shrink hitbox horizontally
+    right: dinoRect.right - 10,
+  };
+
+  let adjustedCactus = {
+    top: cactusRect.top + 5,    // Shrink hitbox vertically
+    bottom: cactusRect.bottom - 5,
+    left: cactusRect.left + 5,  // Shrink hitbox horizontally
+    right: cactusRect.right - 5,
+  };
+
+  // Debugging hitboxes (optional, remove after testing)
+  console.log("Adjusted Dino:", adjustedDino, "Adjusted Cactus:", adjustedCactus);
 
   // Move cactus
   let cactusPosition = parseInt(window.getComputedStyle(cactus).getPropertyValue('right'));
@@ -57,12 +75,12 @@ let gameInterval = setInterval(() => {
   backgroundPosition -= 5; // Move background left
   gameContainer.style.backgroundPosition = `${backgroundPosition}px 0`;
 
-  // Collision detection
+  // Collision detection with adjusted hitboxes
   if (
-    dinoRect.right > cactusRect.left && // Dino's right edge passes cactus's left edge
-    dinoRect.left < cactusRect.right && // Dino's left edge passes cactus's right edge
-    dinoRect.bottom > cactusRect.top && // Dino's bottom edge passes cactus's top edge
-    dinoRect.top < cactusRect.bottom // Dino's top edge passes cactus's bottom edge
+    adjustedDino.right > adjustedCactus.left && // Dino's right edge passes cactus's left edge
+    adjustedDino.left < adjustedCactus.right && // Dino's left edge passes cactus's right edge
+    adjustedDino.bottom > adjustedCactus.top && // Dino's bottom edge passes cactus's top edge
+    adjustedDino.top < adjustedCactus.bottom // Dino's top edge passes cactus's bottom edge
   ) {
     alert("Game Over! Final Score: " + score);
     score = 0;
