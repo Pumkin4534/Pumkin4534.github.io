@@ -41,6 +41,25 @@ let cactusMoveInterval = setInterval(() => {
   let cactusRect = cactus.getBoundingClientRect(); // Get cactus dimensions
   let dinoRect = dino.getBoundingClientRect(); // Get dino dimensions
 
+  // Adjust the hitbox for dino
+  let adjustedDino = {
+    top: dinoRect.top + 5,    // Shrink hitbox
+    bottom: dinoRect.bottom - 5,
+    left: dinoRect.left + 10,
+    right: dinoRect.right - 10,
+  };
+
+  // Adjust the hitbox for cactus
+  let adjustedCactus = {
+    top: cactusRect.top + 5,    // Shrink hitbox
+    bottom: cactusRect.bottom - 5,
+    left: cactusRect.left + 5,
+    right: cactusRect.right - 5,
+  };
+
+  // Debugging (optional: remove after testing)
+  console.log("Adjusted Dino:", adjustedDino, "Adjusted Cactus:", adjustedCactus);
+
   // Move cactus
   let cactusPosition = parseInt(window.getComputedStyle(cactus).getPropertyValue('right'));
   if (cactusPosition >= 800) {
@@ -51,12 +70,12 @@ let cactusMoveInterval = setInterval(() => {
     cactus.style.right = (cactusPosition + 5) + 'px';
   }
 
-  // Collision detection for visual touch
+  // Collision detection with adjusted hitboxes
   if (
-    dinoRect.right > cactusRect.left && // Dino's right edge passes cactus's left edge
-    dinoRect.left < cactusRect.right && // Dino's left edge passes cactus's right edge
-    dinoRect.bottom > cactusRect.top && // Dino's bottom edge passes cactus's top edge
-    dinoRect.top < cactusRect.bottom // Dino's top edge passes cactus's bottom edge
+    adjustedDino.right > adjustedCactus.left && // Dino's right edge passes cactus's left edge
+    adjustedDino.left < adjustedCactus.right && // Dino's left edge passes cactus's right edge
+    adjustedDino.bottom > adjustedCactus.top && // Dino's bottom edge passes cactus's top edge
+    adjustedDino.top < adjustedCactus.bottom // Dino's top edge passes cactus's bottom edge
   ) {
     alert("Game Over! Final Score: " + score);
     score = 0;
