@@ -12,24 +12,24 @@ document.addEventListener('keydown', (event) => {
 
 function jump() {
   isJumping = true;
-  let jumpHeight = 0; // Current height of the jump
+  let jumpHeight = 0;
 
   // Jump up
   let jumpUp = setInterval(() => {
     if (jumpHeight < 100) {
-      jumpHeight += 5; // Increment height
-      dino.style.bottom = (30 + jumpHeight) + 'px'; // Update dino's position
+      jumpHeight += 5;
+      dino.style.bottom = (30 + jumpHeight) + 'px';
     } else {
       clearInterval(jumpUp);
 
       // Fall down
       let fallDown = setInterval(() => {
         if (jumpHeight > 0) {
-          jumpHeight -= 5; // Decrement height
-          dino.style.bottom = (30 + jumpHeight) + 'px'; // Update dino's position
+          jumpHeight -= 5;
+          dino.style.bottom = (30 + jumpHeight) + 'px';
         } else {
           clearInterval(fallDown);
-          isJumping = false; // Reset jumping state
+          isJumping = false;
         }
       }, 20);
     }
@@ -38,9 +38,11 @@ function jump() {
 
 // Cactus movement and collision detection
 let cactusMoveInterval = setInterval(() => {
-  let cactusPosition = parseInt(window.getComputedStyle(cactus).getPropertyValue('right'));
-  
+  let cactusRect = cactus.getBoundingClientRect(); // Get cactus dimensions
+  let dinoRect = dino.getBoundingClientRect(); // Get dino dimensions
+
   // Move cactus
+  let cactusPosition = parseInt(window.getComputedStyle(cactus).getPropertyValue('right'));
   if (cactusPosition >= 800) {
     cactus.style.right = '-60px';
     score += 1;
@@ -49,11 +51,13 @@ let cactusMoveInterval = setInterval(() => {
     cactus.style.right = (cactusPosition + 5) + 'px';
   }
 
-  // Dino position for collision detection
-  let dinoPosition = parseInt(window.getComputedStyle(dino).getPropertyValue('bottom'));
-
-  // Check for collision
-  if (cactusPosition >= 50 && cactusPosition <= 90 && dinoPosition <= 80 && !isJumping) {
+  // Collision detection
+  if (
+    dinoRect.left < cactusRect.right && // Dino's left edge is before cactus's right edge
+    dinoRect.right > cactusRect.left && // Dino's right edge is after cactus's left edge
+    dinoRect.bottom > cactusRect.top && // Dino's bottom is below cactus's top
+    dinoRect.top < cactusRect.bottom // Dino's top is above cactus's bottom
+  ) {
     alert("Game Over! Final Score: " + score);
     score = 0;
     scoreDisplay.innerText = "Score: " + score;
