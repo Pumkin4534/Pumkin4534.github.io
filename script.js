@@ -58,8 +58,8 @@ let cactusMoveInterval = setInterval(() => {
   if (
     dinoRect.right > cactusRect.left && // Dino's right edge is past cactus's left edge
     dinoRect.left < cactusRect.right && // Dino's left edge is before cactus's right edge
-    dinoRect.bottom > cactusRect.top && // Dino's bottom is above cactus's top
-    dinoRect.top < cactusRect.bottom // Dino's top is below cactus's bottom
+    dinoRect.bottom <= cactusRect.bottom && // Dino's bottom is below cactus's bottom
+    dinoRect.bottom > cactusRect.top // Dino's bottom is above cactus's top
   ) {
     // Debugging: Log collision details
     console.log("Collision detected!");
