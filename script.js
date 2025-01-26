@@ -1,8 +1,10 @@
 let dino = document.getElementById('dino');
 let cactus = document.getElementById('cactus');
 let scoreDisplay = document.getElementById('score');
+let gameContainer = document.querySelector('.game-container');
 let score = 0;
 let isJumping = false;
+let backgroundPosition = 0; // Initial position of the background
 
 document.addEventListener('keydown', (event) => {
   if (event.code === "Space" && !isJumping) {
@@ -37,28 +39,9 @@ function jump() {
 }
 
 // Cactus movement and collision detection
-let cactusMoveInterval = setInterval(() => {
+let gameInterval = setInterval(() => {
   let cactusRect = cactus.getBoundingClientRect(); // Get cactus dimensions
   let dinoRect = dino.getBoundingClientRect(); // Get dino dimensions
-
-  // Adjust the hitbox for dino
-  let adjustedDino = {
-    top: dinoRect.top + 10,    // Shrink hitbox vertically
-    bottom: dinoRect.bottom - 10,
-    left: dinoRect.left + 15, // Shrink hitbox horizontally
-    right: dinoRect.right - 15,
-  };
-
-  // Adjust the hitbox for cactus
-  let adjustedCactus = {
-    top: cactusRect.top + 5,    // Shrink hitbox vertically
-    bottom: cactusRect.bottom - 5,
-    left: cactusRect.left + 5,  // Shrink hitbox horizontally
-    right: cactusRect.right - 5,
-  };
-
-  // Debugging (optional: remove after testing)
-  console.log("Adjusted Dino:", adjustedDino, "Adjusted Cactus:", adjustedCactus);
 
   // Move cactus
   let cactusPosition = parseInt(window.getComputedStyle(cactus).getPropertyValue('right'));
@@ -70,16 +53,22 @@ let cactusMoveInterval = setInterval(() => {
     cactus.style.right = (cactusPosition + 5) + 'px';
   }
 
-  // Collision detection with adjusted hitboxes
+  // Move background at the same speed as the cactus
+  backgroundPosition -= 5; // Move background left
+  gameContainer.style.backgroundPosition = `${backgroundPosition}px 0`;
+
+  // Collision detection
   if (
-    adjustedDino.right > adjustedCactus.left && // Dino's right edge passes cactus's left edge
-    adjustedDino.left < adjustedCactus.right && // Dino's left edge passes cactus's right edge
-    adjustedDino.bottom > adjustedCactus.top && // Dino's bottom edge passes cactus's top edge
-    adjustedDino.top < adjustedCactus.bottom // Dino's top edge passes cactus's bottom edge
+    dinoRect.right > cactusRect.left && // Dino's right edge passes cactus's left edge
+    dinoRect.left < cactusRect.right && // Dino's left edge passes cactus's right edge
+    dinoRect.bottom > cactusRect.top && // Dino's bottom edge passes cactus's top edge
+    dinoRect.top < cactusRect.bottom // Dino's top edge passes cactus's bottom edge
   ) {
     alert("Game Over! Final Score: " + score);
     score = 0;
     scoreDisplay.innerText = "Score: " + score;
     cactus.style.right = '-60px'; // Reset cactus position
+    backgroundPosition = 0; // Reset background position
+    gameContainer.style.backgroundPosition = `${backgroundPosition}px 0`;
   }
 }, 20);
