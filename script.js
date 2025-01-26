@@ -43,17 +43,17 @@ let cactusMoveInterval = setInterval(() => {
 
   // Adjust the hitbox for dino
   let adjustedDino = {
-    top: dinoRect.top + 5,    // Shrink hitbox
-    bottom: dinoRect.bottom - 5,
-    left: dinoRect.left + 10,
-    right: dinoRect.right - 10,
+    top: dinoRect.top + 10,    // Shrink hitbox vertically
+    bottom: dinoRect.bottom - 10,
+    left: dinoRect.left + 15, // Shrink hitbox horizontally
+    right: dinoRect.right - 15,
   };
 
   // Adjust the hitbox for cactus
   let adjustedCactus = {
-    top: cactusRect.top + 5,    // Shrink hitbox
+    top: cactusRect.top + 5,    // Shrink hitbox vertically
     bottom: cactusRect.bottom - 5,
-    left: cactusRect.left + 5,
+    left: cactusRect.left + 5,  // Shrink hitbox horizontally
     right: cactusRect.right - 5,
   };
 
