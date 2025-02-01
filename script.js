@@ -6,6 +6,7 @@ let isJumping = false;
 let backgroundPosition = 0;
 
 let cacti = [];
+let lastCactusSpawnTime = 0;
 
 document.addEventListener('keydown', (event) => {
   if (event.code === "Space" && !isJumping) {
@@ -20,23 +21,58 @@ document.addEventListener('touchstart', (event) => {
 });
 
 function jump() {
-  // ... (jump function remains the same)
+  isJumping = true;
+  let jumpHeight = 0;
+
+  let jumpUp = setInterval(() => {
+    if (jumpHeight < 100) {
+      jumpHeight += 5;
+      dino.style.bottom = (30 + jumpHeight) + 'px';
+    } else {
+      clearInterval(jumpUp);
+
+      let fallDown = setInterval(() => {
+        if (jumpHeight > 0) {
+          jumpHeight -= 5;
+          dino.style.bottom = (30 + jumpHeight) + 'px';
+        } else {
+          clearInterval(fallDown);
+          isJumping = false;
+        }
+      }, 20);
+    }
+  }, 20);
 }
 
 function createCactus() {
-  let cactus = document.createElement('div');
-  cactus.classList.add('cactus');
-  cactus.style.right = `-${cactus.offsetWidth}px`; // Start just outside the right edge
-  gameContainer.appendChild(cactus);
-  cacti.push(cactus);
+  // Only create a new cactus if no cacti exist
+  if (cacti.length === 0) {
+    let cactus = document.createElement('div');
+    cactus.classList.add('cactus');
+    
+    // Position the cactus just outside the right edge of the game container
+    cactus.style.right = `-60px`;
+    
+    gameContainer.appendChild(cactus);
+    cacti.push(cactus);
+  }
 }
 
 function spawnCactiRandomly() {
-  createCactus();
-  let randomTime = Math.random() * 2000 + 1500;
-  setTimeout(spawnCactiRandomly, randomTime);
+  // Check current time and last spawn time
+  let currentTime = Date.now();
+  
+  // Spawn a new cactus with a random interval between 1.5 and 3.5 seconds
+  if (currentTime - lastCactusSpawnTime > (Math.random() * 2000 + 1500)) {
+    createCactus();
+    lastCactusSpawnTime = currentTime;
+  }
+
+  // Continue spawning
+  requestAnimationFrame(spawnCactiRandomly);
 }
 
+// Start spawning cacti
 spawnCactiRandomly();
 
 let gameInterval = setInterval(() => {
