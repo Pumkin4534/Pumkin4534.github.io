@@ -49,7 +49,7 @@ body, html {
   width: 30px;
   height: 50px;
   background-image: url('cactus.png');
-  background-size: cover;
+  background-size: contain;
   z-index: 2; /* Cactus above the background but below the dino */
 }
 
