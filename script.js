@@ -54,12 +54,6 @@ function createCactus() {
   cactus.style.right = '-60px';
   gameContainer.appendChild(cactus);
   cacti.push(cactus);
-
-  // Remove cactus when it goes off-screen
-  setTimeout(() => {
-    cactus.remove();
-    cacti.shift();
-  }, 8000); // Ensure removal happens after it leaves the screen
 }
 
 // Random cactus spawner
@@ -88,10 +82,18 @@ let gameInterval = setInterval(() => {
   backgroundPosition -= 5; // Move background left
   gameContainer.style.backgroundPosition = `${backgroundPosition}px 0`;
 
-  // Loop through all cacti for movement and collision detection
-  cacti.forEach((cactus) => {
+  // Loop through all cacti for movement, collision detection, and removal
+  for (let i = cacti.length - 1; i >= 0; i--) {
+    let cactus = cacti[i];
     let cactusPosition = parseInt(window.getComputedStyle(cactus).getPropertyValue('right'));
     cactus.style.right = (cactusPosition + 5) + 'px';
+
+    // Remove cactus when it goes off-screen
+    if (cactusPosition > gameContainer.offsetWidth) {
+      cactus.remove();
+      cacti.splice(i, 1);
+      continue;
+    }
 
     let cactusRect = cactus.getBoundingClientRect();
 
@@ -105,10 +107,10 @@ let gameInterval = setInterval(() => {
 
     // Collision detection with adjusted hitboxes
     if (
-      adjustedDino.right > adjustedCactus.left && // Dino's right edge passes cactus's left edge
-      adjustedDino.left < adjustedCactus.right && // Dino's left edge passes cactus's right edge
-      adjustedDino.bottom > adjustedCactus.top && // Dino's bottom edge passes cactus's top edge
-      adjustedDino.top < adjustedCactus.bottom // Dino's top edge passes cactus's bottom edge
+      adjustedDino.right > adjustedCactus.left &&
+      adjustedDino.left < adjustedCactus.right &&
+      adjustedDino.bottom > adjustedCactus.top &&
+      adjustedDino.top < adjustedCactus.bottom
     ) {
       alert("Game Over! Final Score: " + score);
       score = 0;
@@ -118,7 +120,7 @@ let gameInterval = setInterval(() => {
       backgroundPosition = 0; // Reset background position
       gameContainer.style.backgroundPosition = `${backgroundPosition}px 0`;
     }
-  });
+  }
 
   // Increment score
   score += 1;
