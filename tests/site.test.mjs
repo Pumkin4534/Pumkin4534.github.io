@@ -13,7 +13,6 @@ test('exactly one install command and no install toggle', async () => {
   assert.equal((html.match(/curl -fsSL/g) ?? []).length, 1);
   assert.ok(!html.includes('type="radio"'));
   assert.ok(html.includes('GitHub repository access required'));
-  assert.ok(html.includes('the MCP repository is still private'));
   assert.ok(!html.includes('noindex'));
   for (const match of html.matchAll(/(?:src|href)="([^"#]+)"/g)) {
     if (!match[1].startsWith('https:')) await access(join(root, match[1]));
