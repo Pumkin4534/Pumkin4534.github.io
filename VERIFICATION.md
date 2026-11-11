@@ -12,6 +12,25 @@ bootstrap, not the MCP implementation or runtime state.
   download dispatch without GitHub CLI/credentials, download failure, unsupported
   platform and missing toolchain. The bootstrap dispatch test uses a fixture
   archive and build steps; it is not a full Rust compilation test.
+
+## Fresh-machine prerequisites
+
+The bootstrap now prepares missing Rust/Cargo and Node.js/npm automatically.
+The current bootstrap/site suite has 11 passing tests covering supported existing
+tools, Rust outside PATH, absent/old Rust, retained shell profiles, failed downloads,
+Node checksum rejection, missing Apple developer tools and public access.
+Dependency preparation in these unit tests uses explicit fixtures.
+
+A separate real-tool test started with no Cargo, rustc, Node, npm or GitHub CLI on
+PATH and no user toolchains in its isolated home. Official rustup installed a
+minimal stable toolchain. Its first startup exceeded the test deadline; that
+initial run is not counted as a completed install. Direct version diagnostics
+then confirmed the installed Cargo and rustc. A deliberate continuation reused
+that verified toolchain without reinstalling it, downloaded and checksum-verified
+Node.js 22.23.4, compiled Arc, and installed it successfully. Version 0.1.1, all
+seven MCP tools, config/plugin contents, build-path removal and preserved shell
+profiles were verified. This is staged validation, not a claim that the initial
+clean-home invocation completed uninterrupted.
 - JavaScript syntax and Bash syntax checks passed.
 - Browser layouts checked at 360, 390, 600, 768, 850, 1100 and 1440 CSS pixels
   without horizontal overflow; 200% zoom also checked.

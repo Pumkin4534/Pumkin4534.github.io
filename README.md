@@ -8,6 +8,15 @@ source archive over HTTPS and uses the source installer. GitHub CLI, credentials
 and repository invitations are not needed. The installer builds locally and
 preserves existing OpenCode settings.
 
+Missing Rust/Cargo or Node.js/npm are prepared automatically. Valid existing
+tools are reused, including Rust installed outside the current shell PATH.
+Automatically installed tools live under
+`${XDG_DATA_HOME:-$HOME/.local/share}/arc-mcp/tools` (override with `ARC_TOOLS_HOME`).
+Rust uses official rustup with a minimal stable toolchain; Node.js 22.23.4 uses
+official architecture-specific archives with pinned SHA-256 verification.
+Installer PATH changes are process-local; existing toolchains and shell profiles
+are not replaced. OpenCode and Apple's Xcode command line tools are prerequisites.
+
 ## Design and motion
 
 Original warm graphite / ivory / copper identity, generated canvas geometry and
