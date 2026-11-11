@@ -5,9 +5,9 @@ bootstrap, not the private MCP implementation or runtime state.
 
 ## Local checks
 
-- Current revision: ten functional tests passed (five open-path/fade tests and
-  five explorer-state tests), plus the two site/asset checks. The unchanged
-  installer has four earlier access/error tests covering refusals before files.
+- The scroll restoration passed the two site/asset checks and JavaScript syntax
+  validation. Baseline coverage also includes five open-path/fade regressions and
+  four installer access/error checks covering refusals before installation files.
 - JavaScript syntax and Bash syntax checks passed.
 - Browser layouts checked at 360, 390, 600, 768, 850, 1100 and 1440 CSS pixels
   without horizontal overflow; 200% zoom also checked.
@@ -33,16 +33,17 @@ and a maximum visible per-frame displacement of 1.24 CSS pixels. Each drawn cont
 had exactly its original 95 segments. These are local observations, not device-wide
 FPS guarantees.
 
-## Hands-on feature explorer
+## Restored scroll-driven workflow
 
-The CSV-export demo was exercised through early completion refusal, planning,
-checks, both simulated reviews, completion, source edits invalidating evidence,
-a failed latest check, and reset. Keyboard activation and native touch taps in a
-mobile browser context passed. State survives scrolling and the animated signal
-lands on the corresponding workflow node. All outcomes are explicitly simulated.
-The header's Install link and GitHub repository button were visible on mobile;
-there is no motion-toggle button. Seven viewport widths and 200% zoom showed no
-horizontal overflow.
+The second section uses its original illustrated CSV-export panel again. Scrolling
+advances the drawn path and the plan/check/review example states; scrolling upward
+rewinds it. All three stages and reverse scrolling passed a browser check.
+The interactive mission controls and their controller were removed.
+
+The header navigation links now share centered alignment and equal vertical
+padding. Browser measurements placed all three text boxes on the same vertical
+coordinates. Desktop and mobile checks passed with no horizontal overflow; the
+GitHub button remains available and there is no visible motion toggle.
 
 The illustration is original programmatic artwork, not a real product session.
 These browser checks do not establish compatibility with every browser/device.

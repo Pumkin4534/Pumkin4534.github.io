@@ -12,7 +12,7 @@ are embedded in the website, URL, or command.
 ## Design and motion
 
 Original warm graphite / ivory / copper identity, generated canvas geometry and
-an interactive SVG workflow. No remotely loaded images, fonts, libraries or analytics.
+a scroll-driven SVG workflow. No remotely loaded images, fonts, libraries or analytics.
 The embedded GitHub mark comes from Octicons; see `THIRD-PARTY-NOTICES.md`.
 The user supplied a high-motion reference name that could not be verified; this
 is an original composition, not a claimed recreation of that site.
@@ -23,9 +23,8 @@ is an original composition, not a claimed recreation of that site.
 - Signals use fractional arc-length motion on the original open contours, fading
   out at the end and back in at the start. No closing connector lines are drawn.
   Shape morphs use time-based easing rather than per-frame position snaps.
-- A hands-on CSV-export mission lets visitors plan, check, review and finish, then
-  edit the source or fail a check to explore evidence freshness and completion gates.
-  Feedback is labelled as simulated; nothing invokes a model or executes commands.
+- The original illustrated CSV-export path advances through plan, check and review
+  as visitors scroll. It is an illustration; nothing invokes a model or commands.
 - System reduced-motion preferences are respected automatically, with no visible
   motion toggle and no scroll interception.
 - Canvas stops when out of view or the document is hidden; DPR/frame rate capped.

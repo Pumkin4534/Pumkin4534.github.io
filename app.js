@@ -1,6 +1,5 @@
 // Original local illustration. No services, analytics, model calls or libraries.
 import { buildPath, samplePath } from './orbit.js?v=3';
-import { createDemo, applyDemoAction, nextDemoAction, demoReadiness } from './explorer.js';
 
 const root = document.documentElement;
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -266,89 +265,40 @@ if (context) {
   reshapeButton.hidden = true;
 }
 
-// The feature playground owns its progress. Scrolling never overwrites a user's
-// chosen example state, and every result is explicitly labelled as simulated.
+// The line follows reading progress; native scroll is never intercepted.
 const steps = [...document.querySelectorAll('.flow-step')];
 const trace = document.querySelector('#trace-progress');
 const signal = document.querySelector('#trace-signal');
+const journey = document.querySelector('.journey');
 const traceLength = trace.getTotalLength();
-const checkSegment = trace.cloneNode(false);
-checkSegment.setAttribute('d', 'M45 65H140Q180 65 180 110V140Q180 185 220 185');
-const checkProgress = checkSegment.getTotalLength() / traceLength;
+const exampleStates = [
+  'Scope → headers, encoding, empty rows.',
+  'Checks → example tests pass on current source.',
+  'Review → two example judgments recorded.',
+];
 trace.style.strokeDasharray = traceLength;
-const playground = document.querySelector('#playground');
-const nextButton = document.querySelector('#demo-next');
-let demo = createDemo();
-let tracePosition = 0, traceTarget = 0, traceFrame = 0;
-
-function paintTrace(progress) {
-  tracePosition = progress;
+let scrollFrame = 0;
+function updateJourney() {
+  scrollFrame = 0;
+  const middle = innerHeight * .58;
+  let active = 0;
+  steps.forEach((step, index) => {
+    const rect = step.getBoundingClientRect();
+    if (rect.top < middle) active = index;
+    if (rect.top < innerHeight * .9) step.classList.add('seen');
+  });
+  const rect = journey.getBoundingClientRect();
+  const progress = Math.max(0, Math.min(1, (middle - rect.top) / Math.max(1, rect.height - innerHeight * .2)));
   const length = traceLength * progress;
   trace.style.strokeDashoffset = traceLength - length;
   const point = trace.getPointAtLength(length);
   signal.setAttribute('cx', point.x); signal.setAttribute('cy', point.y);
+  steps.forEach((step, index) => step.classList.toggle('active', index === active));
+  document.querySelectorAll('[data-node]').forEach(node => node.classList.toggle('active', Number(node.dataset.node) <= active));
+  document.querySelector('#trace-output').textContent = exampleStates[active];
 }
-
-function moveTrace(target) {
-  if (traceFrame) cancelAnimationFrame(traceFrame);
-  traceFrame = 0;
-  traceTarget = target;
-  if (!motion || document.hidden) { paintTrace(target); return; }
-  const from = tracePosition, start = performance.now();
-  function frame(now) {
-    const t = Math.min(1, (now - start) / 650);
-    paintTrace(from + (target - from) * (t * t * (3 - 2 * t)));
-    traceFrame = t < 1 ? requestAnimationFrame(frame) : 0;
-  }
-  traceFrame = requestAnimationFrame(frame);
-}
-
-function stopTraceMotion() {
-  if (traceFrame) cancelAnimationFrame(traceFrame);
-  traceFrame = 0;
-  paintTrace(traceTarget);
-}
-motionListeners.add(() => { if (!motion) stopTraceMotion(); });
-document.addEventListener('visibilitychange', () => { if (document.hidden) stopTraceMotion(); });
-
-function renderDemo(result) {
-  demo = result.state;
-  const status = demoReadiness(demo);
-  const checked = Boolean(demo.check?.passed && demo.check.version === demo.version);
-  const reviewed = demo.reviewVersion === demo.version;
-  const labels = { plan: 'Make a plan', check: 'Run demo check', review: 'Get demo reviews', finish: 'Finish example', reset: 'Play again' };
-  const next = nextDemoAction(demo);
-  nextButton.textContent = `${labels[next]} →`;
-  nextButton.dataset.action = next;
-  playground.dataset.state = status;
-  playground.classList.toggle('completed', demo.finished);
-  document.querySelector('#demo-plan-state').textContent = demo.planned ? '3 outcomes' : 'Not started';
-  const checkLabel = !demo.check ? 'Not run' : !demo.check.passed ? 'Failed' : checked ? 'Current' : 'Stale';
-  document.querySelector('#demo-check-state').textContent = checkLabel;
-  document.querySelector('#demo-review-state').textContent = reviewed ? '2 / 2' : '0 / 2';
-  document.querySelector('#demo-feature').textContent = result.feature;
-  document.querySelector('#trace-output').textContent = result.message;
-  document.querySelector('#demo-source').textContent = `example source v${demo.version} · ${demo.check ? `check: ${checkLabel.toLowerCase()}` : 'no evidence yet'}`;
-  document.querySelector('.demo-feedback').dataset.tone = result.tone;
-  const ready = [demo.planned, checked, reviewed];
-  playground.querySelectorAll('.demo-stages button').forEach((button, i) => button.classList.toggle('complete', ready[i]));
-  playground.querySelectorAll('[data-node]').forEach(node => node.classList.toggle('active', ready[Number(node.dataset.node)]));
-  playground.querySelector('[data-demo-action="edit"]').disabled = !demo.planned;
-  playground.querySelector('[data-demo-action="fail"]').disabled = !demo.planned;
-  document.querySelector('.trace-map').setAttribute('aria-label', `Example workflow: ${demo.planned ? 'plan ready' : 'plan missing'}, check ${checkLabel.toLowerCase()}, ${reviewed ? 'two reviews recorded' : 'reviews needed'}`);
-  steps.forEach((step, index) => step.classList.toggle('active', index === (next === 'plan' ? 0 : next === 'check' ? 1 : 2)));
-  signal.setAttribute('opacity', demo.planned ? '1' : '0');
-  moveTrace(reviewed ? 1 : checked ? checkProgress : 0);
-}
-
-for (const button of playground.querySelectorAll('[data-demo-action]')) {
-  button.addEventListener('click', () => renderDemo(applyDemoAction(demo, button.dataset.demoAction)));
-}
-nextButton.addEventListener('click', () => renderDemo(applyDemoAction(demo, nextDemoAction(demo))));
-renderDemo({ state: demo, feature: 'START WITH INTENT', message: 'Can you get this export ready to ship? Make a plan, check it, then get two fresh perspectives.', tone: 'info' });
-
-const stepObserver = new IntersectionObserver(entries => {
-  for (const entry of entries) if (entry.isIntersecting) { entry.target.classList.add('seen'); stepObserver.unobserve(entry.target); }
-}, { threshold: .1 });
-steps.forEach(step => stepObserver.observe(step));
+function requestJourneyUpdate() { if (!scrollFrame) scrollFrame = requestAnimationFrame(updateJourney); }
+addEventListener('scroll', requestJourneyUpdate, { passive: true });
+addEventListener('resize', requestJourneyUpdate);
 root.classList.add('enhanced');
+updateJourney();
