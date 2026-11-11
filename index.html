@@ -11,16 +11,16 @@
   <meta property="og:type" content="website">
   <link rel="canonical" href="https://pumkin4534.github.io/arc-mcp-site/">
   <link rel="icon" href="mark.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css">
-  <script src="app.js?v=2" type="module"></script>
+  <link rel="stylesheet" href="style.css?v=3">
+  <script src="app.js?v=3" type="module"></script>
   <title>Arc MCP — Intelligence with direction</title>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
   <header class="header wrap">
     <a href="#" class="brand" aria-label="Arc MCP home"><img src="mark.svg" width="31" height="31" alt=""><span>arc<span class="brand-suffix">MCP</span></span></a>
-    <nav aria-label="Main navigation"><a href="#workflow">The workflow</a><a href="#trust">The boundaries</a></nav>
-    <div class="header-actions"><button id="motion" class="motion-control" type="button" aria-pressed="false" aria-label="Pause motion"><span class="motion-icon" aria-hidden="true">Ⅱ</span><span class="motion-text">Motion on</span></button><a class="nav-cta" href="#install">Get Arc <span aria-hidden="true">↗</span></a></div>
+    <nav aria-label="Main navigation"><a href="#workflow">The workflow</a><a href="#trust">The boundaries</a><a class="header-install" href="#install">Install</a></nav>
+    <div class="header-actions"><a class="button github-button" href="https://github.com/Pumkin4534/arc-mcp" aria-label="GitHub repository"><svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><path d="M6.766 11.328c-2.063-.25-3.516-1.734-3.516-3.656 0-.781.281-1.625.75-2.188-.203-.515-.172-1.609.063-2.062.625-.078 1.468.25 1.968.703.594-.187 1.219-.281 1.985-.281.765 0 1.39.094 1.953.265.484-.437 1.344-.765 1.969-.687.218.422.25 1.515.046 2.047.5.593.766 1.39.766 2.203 0 1.922-1.453 3.375-3.547 3.64.531.344.89 1.094.89 1.954v1.625c0 .468.391.734.86.547C13.781 14.359 16 11.53 16 8.03 16 3.61 12.406 0 7.984 0 3.563 0 0 3.61 0 8.031a7.88 7.88 0 0 0 5.172 7.422c.422.156.828-.125.828-.547v-1.25c-.219.094-.5.156-.75.156-1.031 0-1.64-.562-2.078-1.609-.172-.422-.36-.672-.719-.719-.187-.015-.25-.093-.25-.187 0-.188.313-.328.625-.328.453 0 .844.281 1.25.86.313.452.64.655 1.031.655s.641-.14 1-.5c.266-.265.47-.5.657-.656"/></svg>GitHub</a></div>
   </header>
   <main id="main">
     <section class="hero wrap" aria-labelledby="hero-title">
@@ -28,7 +28,7 @@
         <p class="eyebrow"><span class="status-dot"></span> A NATIVE EXTENSION FOR OPENCODE</p>
         <h1 id="hero-title">Less drift.<br><em>More direction.</em></h1>
         <p class="hero-intro">Give your agent a clear arc—from a broad request to focused outcomes, real checks, and two fresh reviewer perspectives.</p>
-        <div class="hero-actions"><a class="button magnetic" href="#install">Find your flow <span aria-hidden="true">↗</span></a><a class="quiet-link" href="#workflow">See how it works <span aria-hidden="true">↓</span></a></div>
+        <div class="hero-actions"><a class="button magnetic" href="#install">Find your flow <span aria-hidden="true">↗</span></a><a class="quiet-link" href="#playground">Try a task <span aria-hidden="true">↓</span></a></div>
         <p class="hero-note">Your model. Your tools. A more deliberate finish.</p>
       </div>
       <figure class="field" aria-labelledby="field-caption">
@@ -49,9 +49,9 @@
         <div class="section-top"><p class="eyebrow">01 / THE ARC OF A TASK</p><span class="section-meta">INTENT → EVIDENCE → PERSPECTIVE</span></div>
         <div class="workflow-heading"><h2 id="workflow-title">Good work has<br><em>a through-line.</em></h2><p>A compact ledger alongside your native tools. No extra planning model, replacement interface, or reviews after every edit.</p></div>
         <div class="journey">
-          <div class="journey-visual">
-            <div class="trace-top"><span class="eyebrow">ILLUSTRATED WORKFLOW</span><span class="trace-indicator" aria-hidden="true"></span></div>
-            <div class="trace-title"><span>01—03</span><h3>Add a CSV export</h3><p>One request. Connected outcomes.</p></div>
+          <div class="journey-visual explorer" id="playground" aria-labelledby="demo-title">
+            <div class="trace-top"><span class="eyebrow">TAKE A TASK FOR A SPIN</span><button class="demo-reset" type="button" data-demo-action="reset" aria-label="Reset feature demo">Reset ↺</button></div>
+            <div class="trace-title"><span>YOUR MISSION</span><h3 id="demo-title">Ship a CSV export.</h3><p>Build a path to done. Or try to finish too early.</p></div>
             <svg class="trace-map" viewBox="0 0 420 250" role="img" aria-label="A path connecting plan, check and review">
               <path class="trace-base" d="M45 65H140Q180 65 180 110V140Q180 185 220 185H330Q375 185 375 140V65"/>
               <path id="trace-progress" class="trace-progress" d="M45 65H140Q180 65 180 110V140Q180 185 220 185H330Q375 185 375 140V65"/>
@@ -60,8 +60,15 @@
               <g class="trace-node" data-node="2"><circle cx="375" cy="65" r="15"/><text x="375" y="69">03</text><text class="node-label" x="375" y="106">REVIEW</text></g>
               <circle id="trace-signal" class="trace-signal" cx="45" cy="65" r="5"/>
             </svg>
-            <div class="trace-terminal"><span class="terminal-label">EXAMPLE STATE</span><p id="trace-output">Scope → headers, encoding, empty rows.</p><span class="terminal-foot">native-advisory / not a live session</span></div>
-            <p class="trace-disclaimer">Scroll to follow the path. No commands or model calls run in this illustration.</p>
+            <div class="demo-stages" aria-label="Explore the workflow stages">
+              <button type="button" data-demo-action="plan"><span>01 / Plan</span><small id="demo-plan-state">Not started</small></button>
+              <button type="button" data-demo-action="check"><span>02 / Check</span><small id="demo-check-state">Not run</small></button>
+              <button type="button" data-demo-action="review"><span>03 / Review</span><small id="demo-review-state">0 / 2</small></button>
+            </div>
+            <div class="trace-terminal demo-feedback" data-tone="info"><span id="demo-feature" class="terminal-label">START WITH INTENT</span><p id="trace-output" role="status" aria-live="polite" aria-atomic="true">Can you get this export ready to ship? Make a plan, check it, then get two fresh perspectives.</p><span id="demo-source" class="terminal-foot">example source v1 · no evidence yet</span></div>
+            <div class="demo-actions"><button id="demo-next" type="button" class="demo-primary">Make a plan <span aria-hidden="true">→</span></button><button type="button" class="demo-finish" data-demo-action="finish">Try to finish ↗</button></div>
+            <div class="demo-challenges"><span>THROW IT A CURVEBALL</span><div><button type="button" data-demo-action="edit" disabled>Edit the source</button><button type="button" data-demo-action="fail" disabled>Fail a check</button></div></div>
+            <p class="trace-disclaimer">A hands-on browser demo. All results are simulated; no project code, commands, or models run here.</p>
           </div>
           <div class="journey-steps">
             <article class="flow-step" data-step="0"><span class="step-number">01<span aria-hidden="true">/</span></span><div><p class="eyebrow">LESS SCATTER</p><h3>A small plan.<br>A complete scope.</h3><p>One to five broad, ordered outcomes. Every acceptance detail stays in the plan. Your agent builds with the OpenCode tools and model you chose.</p><span class="step-tag">1–5 outcomes · dependency-ordered</span></div></article>

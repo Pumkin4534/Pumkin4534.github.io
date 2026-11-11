@@ -12,18 +12,22 @@ are embedded in the website, URL, or command.
 ## Design and motion
 
 Original warm graphite / ivory / copper identity, generated canvas geometry and
-SVG workflow illustration. No external images, fonts, libraries or analytics.
+an interactive SVG workflow. No remotely loaded images, fonts, libraries or analytics.
+The embedded GitHub mark comes from Octicons; see `THIRD-PARTY-NOTICES.md`.
 The user supplied a high-motion reference name that could not be verified; this
 is an original composition, not a claimed recreation of that site.
 
 - Pointer-reactive projected 3D field, with three morphing geometries. It cycles
   while visible; the reshape button also gives direct mouse/keyboard control.
 - Click/tap ripples and contour-travelling signals.
-- Signals use fractional arc-length motion on the same closed contours that are
-  drawn. Tangent-matched return curves prevent end-to-start jumps; shape morphs
-  use time-based easing rather than per-frame position snaps.
-- Scroll-linked path connecting the illustrated workflow stages.
-- Explicit pause/resume, reduced-motion support, no scroll interception.
+- Signals use fractional arc-length motion on the original open contours, fading
+  out at the end and back in at the start. No closing connector lines are drawn.
+  Shape morphs use time-based easing rather than per-frame position snaps.
+- A hands-on CSV-export mission lets visitors plan, check, review and finish, then
+  edit the source or fail a check to explore evidence freshness and completion gates.
+  Feedback is labelled as simulated; nothing invokes a model or executes commands.
+- System reduced-motion preferences are respected automatically, with no visible
+  motion toggle and no scroll interception.
 - Canvas stops when out of view or the document is hidden; DPR/frame rate capped.
 - Copy button handles unavailable clipboard access without hiding the command.
 
