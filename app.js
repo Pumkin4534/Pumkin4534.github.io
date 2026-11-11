@@ -20,7 +20,7 @@ const copyStatus = document.querySelector('#copy-status');
 copyButton.addEventListener('click', async () => {
   try {
     await navigator.clipboard.writeText(document.querySelector('#install-command').textContent.trim());
-    copyStatus.textContent = 'Copied. Preview access is required.';
+    copyStatus.textContent = 'Copied. Run it in your terminal, then restart OpenCode.';
     copyButton.querySelector('span').textContent = 'Copied';
     copyButton.classList.add('copied');
   } catch {

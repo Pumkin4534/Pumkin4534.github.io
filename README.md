@@ -1,13 +1,12 @@
 # Arc MCP — public website
 
 Website-only repository for [Arc MCP](https://pumkin4534.github.io/arc-mcp-site/).
-The MCP implementation remains in the separate **private** repository.
+The MCP implementation is in the public [Arc MCP repository](https://github.com/Pumkin4534/arc-mcp).
 
-The site shows one public bootstrap command. Installing the private preview still
-requires GitHub CLI authentication and access to `Pumkin4534/arc-mcp`. The bootstrap
-checks access before creating installation files, fetches the pinned `v0.1.1`
-source through GitHub CLI, and uses the audited source installer. No credentials
-are embedded in the website, URL, or command.
+The site shows one public bootstrap command. It fetches the pinned `v0.1.1`
+source archive over HTTPS and uses the source installer. GitHub CLI, credentials
+and repository invitations are not needed. The installer builds locally and
+preserves existing OpenCode settings.
 
 ## Design and motion
 

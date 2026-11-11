@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Public website bootstrap. The MCP source remains a private preview.
+# Public, unauthenticated installation from the pinned source release.
 set -euo pipefail
 umask 077
 
@@ -9,14 +9,6 @@ if [[ "$(uname -s)" != Darwin ]]; then
   printf '%s\n' 'Arc MCP currently supports macOS only. No installation changes were made.' >&2
   exit 1
 fi
-command -v gh >/dev/null || {
-  printf '%s\n' 'Arc is a private preview. Install GitHub CLI (https://cli.github.com), sign in with gh auth login, and obtain access to Pumkin4534/arc-mcp first.' >&2
-  exit 1
-}
-if ! gh api --hostname github.com "repos/$repository" --silent; then
-  printf '%s\n' 'Repository access is required. Sign in with gh auth login and confirm you can access Pumkin4534/arc-mcp. No installation changes were made.' >&2
-  exit 1
-fi
 for tool in cargo rustc node npm curl tar; do
   command -v "$tool" >/dev/null || { printf 'Required tool missing: %s\n' "$tool" >&2; exit 1; }
 done
@@ -24,7 +16,8 @@ node -e 'if (Number(process.versions.node.split(".")[0]) < 20) process.exit(1)' 
 xcode-select -p >/dev/null 2>&1 || { printf '%s\n' 'Install Xcode command line tools first: xcode-select --install' >&2; exit 1; }
 work="$(mktemp -d "${TMPDIR:-/tmp}/arc-install.XXXXXXXX")"
 trap 'rm -rf "$work"' EXIT
-gh api --hostname github.com "repos/$repository/tarball/$ref" > "$work/source.tar.gz"
+curl -q --fail --silent --show-error --location --proto '=https' --proto-redir '=https' --tlsv1.2 \
+  "https://codeload.github.com/$repository/tar.gz/refs/tags/$ref" --output "$work/source.tar.gz"
 mkdir "$work/source"
 tar -xzf "$work/source.tar.gz" -C "$work/source" --strip-components=1
 (
