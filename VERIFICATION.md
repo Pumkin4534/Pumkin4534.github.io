@@ -21,6 +21,16 @@ bootstrap, not the private MCP implementation or runtime state.
   text/background contrast checks reported no below-threshold combinations.
 - No browser console errors were observed during these checks.
 
+## Continuous dot motion
+
+Four orbit regressions passed: loop-seam continuity, sub-vertex movement,
+even travel across uneven vertex spacing, and finite stationary degenerate paths.
+The two affected site/asset checks also passed after switching to a JavaScript
+module. A desktop browser capture recorded 552 frames over 9.18 seconds (about
+60 FPS), with no stationary steps and a maximum steady per-frame dot displacement
+of 1.32 CSS pixels, including a loop wrap. Manual morphing, pause, and reduced-motion
+behavior were also checked. These are local observations, not device-wide FPS guarantees.
+
 The illustration is original programmatic artwork, not a real product session.
 These browser checks do not establish compatibility with every browser/device.
 

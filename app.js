@@ -1,4 +1,6 @@
 // Original local illustration. No services, analytics, model calls or libraries.
+import { buildOrbit, sampleOrbit } from './orbit.js';
+
 const root = document.documentElement;
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 const motionButton = document.querySelector('#motion');
@@ -65,11 +67,15 @@ if (context) {
   const positions = new Float32Array(count * 3);
   const targets = Array.from({ length: 3 }, () => new Float32Array(count * 3));
   const projected = new Float32Array(count * 3);
+  const contourPoints = new Float64Array(segments * 2);
+  const morphFrom = new Float32Array(count * 3);
   const names = ['FOCUS FIELD', 'EVIDENCE STREAM', 'REVIEW ORBITS'];
   let mode = 0;
   let morphClock = 0;
+  let morphElapsed = 2400;
+  let orbitPhase = 0;
   let width = 0, height = 0, phase = 0, last = 0, frame = 0;
-  let inView = true, pulse = 0;
+  let inView = true, pulse = 0, pulseTarget = 0;
   let pointer = { x: 0, y: 0 }, aim = { x: 0, y: 0 };
   const palette = Array.from({ length: 16 }, (_, i) => `rgba(${182 + i * 4},${128 + i * 5},${76 + i * 6},${.18 + i * .044})`);
 
@@ -90,25 +96,36 @@ if (context) {
     }
   }
   positions.set(targets[0]);
+  morphFrom.set(positions);
+
+  function nextShape() {
+    morphFrom.set(positions);
+    mode = (mode + 1) % targets.length;
+    morphElapsed = 0;
+    morphClock = 0;
+    updateShapeLabel();
+  }
 
   function draw(animate = false, elapsed = 0) {
     if (!width || !height) return;
     if (animate) {
       phase += elapsed * .00013;
+      orbitPhase = (orbitPhase + elapsed / 18000) % 1;
       morphClock += elapsed;
       if (morphClock > 10000) {
-        mode = (mode + 1) % targets.length;
-        morphClock = 0;
-        pulse = .55;
-        updateShapeLabel();
+        nextShape();
       }
-      aim.x += (pointer.x - aim.x) * .055;
-      aim.y += (pointer.y - aim.y) * .055;
-      pulse *= .93;
+      const response = -Math.expm1(-elapsed / 180);
+      aim.x += (pointer.x - aim.x) * response;
+      aim.y += (pointer.y - aim.y) * response;
+      pulse += (pulseTarget - pulse) * response;
+      pulseTarget *= Math.exp(-elapsed / 500);
+      morphElapsed = Math.min(2400, morphElapsed + elapsed);
+      const t = morphElapsed / 2400;
+      const ease = t * t * t * (t * (t * 6 - 15) + 10);
+      const target = targets[mode];
+      for (let i = 0; i < positions.length; i++) positions[i] = morphFrom[i] + (target[i] - morphFrom[i]) * ease;
     }
-    const morph = animate ? .055 : 0;
-    const target = targets[mode];
-    for (let i = 0; i < positions.length; i++) positions[i] += (target[i] - positions[i]) * morph;
     context.clearRect(0, 0, width, height);
     const cx = width * (width < 500 ? .5 : .55);
     const cy = height * .49;
@@ -155,13 +172,21 @@ if (context) {
       projected[at + 1] = cy + y * scale * perspective;
       projected[at + 2] = perspective;
     }
-    // Fine contour threads follow the points as all three geometries morph.
+    // Draw the exact closed routes used by the travelling signals. Open forms
+    // get a smooth return curve instead of an invisible end-to-start teleport.
+    const orbits = new Map();
     for (let band = 0; band < bands; band += 2) {
-      context.beginPath();
       for (let j = 0; j < segments; j++) {
         const at = (band * segments + j) * 3;
-        if (j === 0) context.moveTo(projected[at], projected[at + 1]);
-        else context.lineTo(projected[at], projected[at + 1]);
+        contourPoints[j * 2] = projected[at];
+        contourPoints[j * 2 + 1] = projected[at + 1];
+      }
+      const orbit = buildOrbit(contourPoints);
+      orbits.set(band, orbit);
+      context.beginPath();
+      for (let j = 0; j < orbit.vertices.length; j += 2) {
+        if (j === 0) context.moveTo(orbit.vertices[j], orbit.vertices[j + 1]);
+        else context.lineTo(orbit.vertices[j], orbit.vertices[j + 1]);
       }
       context.strokeStyle = `rgba(211,163,107,${.13 + band * .005})`;
       context.lineWidth = .6;
@@ -177,14 +202,13 @@ if (context) {
     }
     // Small moving signals travel on the outer contour, not random sparkles.
     for (let signal = 0; signal < 3; signal++) {
-      const j = Math.floor((phase * 30 + signal * segments / 3) % segments);
-      const at = ((signal * 3) * segments + j) * 3;
+      const point = sampleOrbit(orbits.get(signal * 4), orbitPhase + signal / 3);
       context.beginPath();
-      context.arc(projected[at], projected[at + 1], 3.1, 0, Math.PI * 2);
+      context.arc(point.x, point.y, 3.1, 0, Math.PI * 2);
       context.fillStyle = '#f6d3a7';
       context.fill();
       context.beginPath();
-      context.arc(projected[at], projected[at + 1], 7, 0, Math.PI * 2);
+      context.arc(point.x, point.y, 7, 0, Math.PI * 2);
       context.strokeStyle = 'rgba(230,177,123,.22)';
       context.lineWidth = .8;
       context.stroke();
@@ -195,8 +219,8 @@ if (context) {
   function tick(now) {
     frame = 0;
     if (!canAnimate()) { last = 0; return; }
-    const interval = width < 500 ? 1000 / 30 : 1000 / 45;
-    if (!last || now - last >= interval) {
+    const interval = width < 500 ? 1000 / 30 : 1000 / 60;
+    if (!last || now - last >= interval - .5) {
       draw(true, last ? Math.min(now - last, 60) : interval);
       last = now;
     }
@@ -228,17 +252,19 @@ if (context) {
     pointer = { x: (event.clientX - rect.left) / rect.width * 2 - 1, y: (event.clientY - rect.top) / rect.height * 2 - 1 };
   });
   field.addEventListener('pointerleave', () => { pointer = { x: 0, y: 0 }; });
-  canvas.addEventListener('pointerdown', () => { if (motion) pulse = 1; });
+  canvas.addEventListener('pointerdown', () => { if (motion) pulseTarget = 1; });
   function updateShapeLabel() {
     document.querySelector('#field-name').textContent = names[mode];
     reshapeButton.setAttribute('aria-label', `Reshape particle field. Current shape: ${names[mode].toLowerCase()}`);
   }
   reshapeButton.addEventListener('click', () => {
-    mode = (mode + 1) % targets.length;
-    morphClock = 0;
-    updateShapeLabel();
-    pulse = .7;
-    if (!motion) { positions.set(targets[mode]); draw(false); } else schedule();
+    nextShape();
+    if (!motion) {
+      positions.set(targets[mode]);
+      morphFrom.set(positions);
+      morphElapsed = 2400;
+      draw(false);
+    } else schedule();
   });
   resize();
 } else {

@@ -15,7 +15,7 @@ test('exactly one install command and no install toggle', async () => {
   assert.ok(html.includes('GitHub repository access required'));
   assert.ok(!html.includes('noindex'));
   for (const match of html.matchAll(/(?:src|href)="([^"#]+)"/g)) {
-    if (!match[1].startsWith('https:')) await access(join(root, match[1]));
+    if (!match[1].startsWith('https:')) await access(join(root, match[1].split('?')[0]));
   }
 });
 
