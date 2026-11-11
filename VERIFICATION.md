@@ -68,7 +68,15 @@ one install command, no installation toggle, the active canvas, reshape controls
 and loaded assets. The MCP repository remained private during the website-only
 launch; the owner subsequently authorized publication of the MCP source.
 
-An additional full source-recompilation smoke test through the public bootstrap
-exceeded its allotted runtime. It is **not** counted as a successful fresh
-installation; no automatic replay was performed. The local installer access/error
-tests and the earlier MCP source-installer validation are separate evidence.
+## Anonymous public installation
+
+After removing authentication requirements, a new end-to-end check downloaded
+the deployed public bootstrap and built the pinned public source in a fresh home
+without GitHub/provider credentials. The actual release build and installation
+passed. Installed configuration and plugin contents, binary version 0.1.1,
+absence of checked identifying build paths, MCP initialization and its seven-tool
+catalog were verified. Existing operator configuration was not the target.
+
+An earlier authenticated-bootstrap recompilation attempt timed out and was not
+counted as a pass. The successful anonymous check used the changed public download
+path and a new isolated home; it was not an automatic replay of that attempt.
