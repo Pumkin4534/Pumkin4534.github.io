@@ -30,3 +30,16 @@ Only the website repository is public. The bootstrap downloads the pinned MCP
 source through authenticated GitHub CLI and needs access to the private repository.
 No credential is embedded in the site or its copyable command. No website analytics,
 remote fonts, external JavaScript libraries, or model services are loaded.
+
+## Live publication
+
+GitHub Pages serves https://pumkin4534.github.io/arc-mcp-site/ publicly. The page
+and installer endpoint returned HTTP 200. Live desktop/mobile checks confirmed
+one install command, no installation toggle, the active canvas, reshape and
+pause/resume controls, and loaded assets. The separate MCP repository was checked
+to remain private with no Pages deployment.
+
+An additional full source-recompilation smoke test through the public bootstrap
+exceeded its allotted runtime. It is **not** counted as a successful fresh
+installation; no automatic replay was performed. The local installer access/error
+tests and the earlier MCP source-installer validation are separate evidence.
