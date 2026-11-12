@@ -81,7 +81,7 @@ services are loaded.
 
 ## Live publication
 
-GitHub Pages serves https://pumkin4534.github.io/arc-mcp-site/ publicly. The page
+GitHub Pages serves https://pumkin4534.github.io/ publicly. The page
 and installer endpoint returned HTTP 200. Live desktop/mobile checks confirmed
 one install command, no installation toggle, the active canvas, reshape controls,
 and loaded assets. The MCP repository remained private during the website-only

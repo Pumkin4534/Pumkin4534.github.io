@@ -1,7 +1,10 @@
 # Arc MCP — public website
 
-Website-only repository for [Arc MCP](https://pumkin4534.github.io/arc-mcp-site/).
+Canonical website repository for [Arc MCP](https://pumkin4534.github.io/).
 The MCP implementation is in the public [Arc MCP repository](https://github.com/Pumkin4534/arc-mcp).
+
+The former `/arc-mcp-site/` address is retained as a compatibility entry point.
+Website changes belong in this main-domain repository.
 
 The site shows one public bootstrap command. It fetches the pinned `v0.1.1`
 source archive over HTTPS and uses the source installer. GitHub CLI, credentials
