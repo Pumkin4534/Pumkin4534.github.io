@@ -15,6 +15,11 @@ reduced.addEventListener('change', updateMotion);
 updateMotion();
 
 // One install command. Copy failures leave it selectable; no other install mode.
+const visitorPlatform = navigator.userAgentData?.platform ?? navigator.platform ?? '';
+if (/win/i.test(visitorPlatform)) {
+  document.querySelector('#install-command').textContent = 'irm https://pumkin4534.github.io/install.ps1 | iex';
+  document.querySelector('#install-platform').textContent = 'WINDOWS POWERSHELL';
+}
 const copyButton = document.querySelector('#copy');
 const copyStatus = document.querySelector('#copy-status');
 copyButton.addEventListener('click', async () => {

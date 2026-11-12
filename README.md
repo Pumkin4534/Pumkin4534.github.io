@@ -6,19 +6,15 @@ The MCP implementation is in the public [Arc MCP repository](https://github.com/
 The former `/arc-mcp-site/` address is retained as a compatibility entry point.
 Website changes belong in this main-domain repository.
 
-The site shows one public bootstrap command. It fetches the pinned `v0.1.1`
-source archive over HTTPS and uses the source installer. GitHub CLI, credentials
-and repository invitations are not needed. The installer builds locally and
-preserves existing OpenCode settings.
+The site shows one platform-appropriate install command: PowerShell on Windows,
+Bash on macOS/Ubuntu. The public bootstraps delegate to the canonical MCP
+installers, which verify prebuilt v0.2.0 bundles. GitHub login, Cargo, compiler and
+SDK installation are not needed. Existing OpenCode settings are preserved.
 
-Missing Rust/Cargo or Node.js/npm are prepared automatically. Valid existing
-tools are reused, including Rust installed outside the current shell PATH.
-Automatically installed tools live under
-`${XDG_DATA_HOME:-$HOME/.local/share}/arc-mcp/tools` (override with `ARC_TOOLS_HOME`).
-Rust uses official rustup with a minimal stable toolchain; Node.js 22.23.4 uses
-official architecture-specific archives with pinned SHA-256 verification.
-Installer PATH changes are process-local; existing toolchains and shell profiles
-are not replaced. OpenCode and Apple's Xcode command line tools are prerequisites.
+Node.js 20+ is reused or installed from a checksum-verified official archive.
+Managed tools are user-local (`ARC_TOOLS_HOME` overrides their location). The
+MCP uses Seatbelt on macOS and explicitly non-sandboxed native checks on Windows
+and Ubuntu, with process cleanup and actual output/evidence capture.
 
 ## Design and motion
 
