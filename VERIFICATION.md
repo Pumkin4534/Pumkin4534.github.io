@@ -1,9 +1,31 @@
 # Website verification
 
-This repository contains website assets and a small public source-installer
-bootstrap, not the MCP implementation or runtime state.
+This repository contains website assets and platform-installer wrappers, not the
+MCP implementation or runtime state.
 
-## Local checks
+## Current cross-platform website checks
+
+- Nine site/orbit tests passed, plus JavaScript syntax, Bash syntax and whitespace
+  checks. Open contours and endpoint fades retain their regression coverage.
+- Fresh browser contexts with Windows, macOS and Linux platform values each
+  showed exactly one appropriate command. Copying matched the displayed command
+  using an in-memory clipboard fixture; no system clipboard was changed.
+- At 390 × 844, all three platform cases had no horizontal overflow or page
+  errors and honored reduced motion. At 1440 × 1000, the three navigation links
+  shared identical vertical bounds and the GitHub button linked to the MCP repo.
+- The website wrappers delegate to the core repository's canonical installers.
+  Those installers verify prebuilt release bundles and reuse or prepare Node.js;
+  no compiler is needed. Actual OS installation is tested in the MCP repository's
+  six-platform workflow. Browser platform emulation is not a Windows runtime test.
+- Release publication must precede the website update. Keep the legacy installer
+  URL forwarding to the main domain and restart OpenCode after installation.
+
+## Historical 0.1.1 checks
+
+The sections below record the earlier source-build installer and original visual
+checks. The 0.2.0 prebuilt installer supersedes the Rust/Cargo prerequisites.
+
+### Original local checks
 
 - The scroll restoration passed the two site/asset checks and JavaScript syntax
   validation. Baseline coverage also includes five open-path/fade regressions and
@@ -74,12 +96,12 @@ These browser checks do not establish compatibility with every browser/device.
 ## Publication boundary
 
 The website and MCP source repositories are public with owner approval. The
-bootstrap uses curl to download a pinned source archive over HTTPS without
+current platform bootstraps download pinned release bundles over HTTPS without
 authentication. No credential is embedded in the site or its copyable command.
 No website analytics, remote fonts, external JavaScript libraries, or model
 services are loaded.
 
-## Live publication
+## Historical live 0.1.1 publication
 
 GitHub Pages serves https://pumkin4534.github.io/ publicly. The page
 and installer endpoint returned HTTP 200. Live desktop/mobile checks confirmed
@@ -87,7 +109,7 @@ one install command, no installation toggle, the active canvas, reshape controls
 and loaded assets. The MCP repository remained private during the website-only
 launch; the owner subsequently authorized publication of the MCP source.
 
-## Anonymous public installation
+## Historical anonymous 0.1.1 installation
 
 After removing authentication requirements, a new end-to-end check downloaded
 the deployed public bootstrap and built the pinned public source in a fresh home
