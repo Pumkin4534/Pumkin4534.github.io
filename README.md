@@ -8,8 +8,10 @@ Website changes belong in this main-domain repository.
 
 The site shows one platform-appropriate install command: PowerShell on Windows,
 Bash on macOS/Ubuntu. The public bootstraps delegate to the canonical MCP
-installers, which verify prebuilt v0.2.0 bundles. GitHub login, Cargo, compiler and
-SDK installation are not needed. Existing OpenCode settings are preserved.
+installers, which verify prebuilt v0.2.1 bundles. GitHub login, Cargo, compiler and
+SDK installation are not needed. Rerunning the same command upgrades Arc, retains
+private rollback backups and preserves unrelated OpenCode settings. An identical
+installation is a no-op. Restart OpenCode after an upgrade.
 
 Node.js 20+ is reused or installed from a checksum-verified official archive.
 Managed tools are user-local (`ARC_TOOLS_HOME` overrides their location). The
